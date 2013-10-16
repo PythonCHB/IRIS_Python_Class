@@ -1,0 +1,1139 @@
+\documentclass{beamer}
+%\usepackage[latin1]{inputenc}
+\usetheme{Warsaw}
+\title[IRIS Python Workshop Session 2a]{Strings, Exceptions, Unicode, File Processing}
+\author{Christopher Barker}
+\institute{IRIS}
+\date{October 16, 2013}
+
+
+\usepackage{listings}
+\usepackage{hyperref}
+
+\begin{document}
+
+% ---------------------------------------------
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% ---------------------------------------------
+\begin{frame}
+\frametitle{Table of Contents}
+%\tableofcontents[currentsection]
+  \tableofcontents
+\end{frame}
+
+
+% ---------------------------------------------
+\begin{frame}[fragile]{repr vs. str}
+
+{\Large \verb|repr()| vs \verb|str()| }
+
+\begin{verbatim}
+In [200]: s = "a string\nwith a newline"
+
+In [203]: print str(s)
+a string
+with a newline
+
+In [204]: print repr(s)
+'a string\nwith a newline'
+
+\end{verbatim}
+
+\end{frame}
+
+% ---------------------------------------------
+\begin{frame}[fragile]{repr vs. str}
+
+{\Large \verb| eval(repr(something)) == something | }
+
+\begin{verbatim}
+
+In [205]: s2 = eval(repr(s))
+
+In [206]: s2
+Out[206]: 'a string\nwith a newline'
+\end{verbatim}
+
+\end{frame}
+
+\section{Fun with Strings}
+% ---------------------------------------------
+\begin{frame}[fragile]{Strings}
+
+{\Large A string literal creates a string type}
+
+\begin{verbatim}
+"this is a string"
+\end{verbatim}
+
+{\Large Can also use \verb|str()|}
+
+\begin{verbatim}
+In [256]: str(34)
+Out[256]: '34'
+\end{verbatim}
+{\Large or "back ticks"}
+\begin{verbatim}
+In [258]: `34`
+Out[258]: '34'
+\end{verbatim}
+(demo)
+\end{frame} 
+
+% ---------------------------------------------
+\begin{frame}[fragile]{The String Type}
+
+{\Large Lots of nifty methods:}
+
+\begin{verbatim}
+s.lower()
+s.upper()
+     ...
+s.capitalize()
+s.swapcase()
+s.title()
+\end{verbatim}
+
+\url{http://docs.python.org/library/stdtypes.html#index-23}
+
+\end{frame} 
+
+% ---------------------------------------------
+\begin{frame}[fragile]{The String Type}
+
+{\Large Lots of nifty methods:}
+
+\begin{verbatim}
+x in s
+s.startswith(x)
+s.endswith(x)
+...
+s.index(x)
+s.find(x)
+s.rfind(x)
+\end{verbatim}
+
+\url{http://docs.python.org/library/stdtypes.html#index-23}
+
+\end{frame} 
+
+% ---------------------------------------------
+\begin{frame}[fragile]{The String Type}
+
+{\Large Lots of nifty methods:}
+
+\begin{verbatim}
+s.split()
+s.join(list)
+...
+s.splitlines()
+\end{verbatim}
+
+\url{http://docs.python.org/library/stdtypes.html#index-23}
+\vfill
+
+\end{frame} 
+
+% ---------------------------------------------
+\begin{frame}[fragile]{Joining Strings}
+
+{\Large The Join Method:}
+
+\vfill
+\begin{verbatim}
+In [289]: t = ("some", "words","to","join")
+
+In [290]: " ".join(t)
+Out[290]: 'some words to join'
+
+In [291]: ",".join(t)
+Out[291]: 'some,words,to,join'
+
+In [292]: "".join(t)
+Out[292]: 'somewordstojoin'
+\end{verbatim}
+
+\vfill
+(demo -- join)
+
+\end{frame} 
+
+% ---------------------------------------------
+\begin{frame}[fragile]{The string module}
+
+{\Large Lots of handy constants, etc.}
+\begin{verbatim}
+string.ascii_letters
+string.ascii_lowercase 
+string.ascii_uppercase  
+string.letters
+string.hexdigits 
+string.whitespace
+string.printable
+string.digits
+string.punctuation      
+\end{verbatim}
+
+\vfill
+(and the string methods -- legacy)
+
+\vfill
+{\small \url{http://docs.python.org/2/library/string.html#module-string} }
+\end{frame} 
+
+% ---------------------------------------------
+\begin{frame}[fragile]{String Literals}
+
+{\Large Common Escape Sequences}
+\vfill
+\begin{verbatim}
+\\  Backslash (\)   
+\a  ASCII Bell (BEL)  
+\b  ASCII Backspace (BS)  
+\n  ASCII Linefeed (LF)   
+\r  ASCII Carriage Return (CR)  
+\t  ASCII Horizontal Tab (TAB)  
+\ooo  Character with octal value ooo 
+\xhh  Character with hex value hh
+\end{verbatim}
+(\url{http://docs.python.org/release/2.5.2/ref/strings.html})
+\end{frame} 
+
+% ---------------------------------------------
+\begin{frame}[fragile]{Raw Strings}
+
+{\Large Escape Sequences Ignored}
+\vfill
+\begin{verbatim}
+In [408]: print "this\nthat"
+this
+that
+In [409]: print r"this\nthat"
+this\nthat
+\end{verbatim}
+
+{\Large Gotcha:}
+\begin{verbatim}
+In [415]: r"\"
+SyntaxError: EOL while scanning string literal
+\end{verbatim}
+
+\vfill
+(handy for regex, windows paths...)
+\end{frame} 
+
+
+% ---------------------------------------------
+\begin{frame}[fragile]{Character Values}
+
+{\Large Characters in strings are stored as numeric values}
+
+\vfill
+{\large ``ASCII'' values: 1-127}
+
+\vfill
+{\large ``ANSI'' values: 1-255}
+
+
+\vfill
+{\large To get the value:}
+\begin{verbatim}
+In [109]: for i in 'Chris':
+   .....:     print ord(i), 
+67 104 114 105 115
+
+In [110]: for i in (67,104,114,105,115):
+   .....:     print chr(i),
+C h r i s
+\end{verbatim}
+
+\vfill
+(later: unicode!)
+\end{frame} 
+
+
+% ---------------------------------------------
+\begin{frame}[fragile]{Building Strings}
+
+{\Large Please don't do this:
+
+\vfill
+\begin{verbatim}
+'Hello ' + name + '!'
+\end{verbatim}
+}
+\vfill
+(much)
+
+\end{frame} 
+
+% ---------------------------------------------
+\begin{frame}[fragile]{Building Strings}
+
+{\Large Do this instead:
+
+\vfill
+\begin{verbatim}
+'Hello %s!' % name
+\end{verbatim}
+
+\vfill
+much faster and safer:
+
+\vfill
+easier to modify as code gets complicated
+}
+
+\vfill
+\url{http://docs.python.org/library/stdtypes.html#string-formatting-operations}
+\end{frame} 
+
+
+% ---------------------------------------------
+\begin{frame}[fragile]{String Formatting}
+
+{\Large The string format operator: \%}
+
+\begin{verbatim}
+In [261]: "an integer is: %i"%34
+Out[261]: 'an integer is: 34'
+
+In [262]: "a floating point is: %f"%34.5
+Out[262]: 'a floating point is: 34.500000'
+
+In [263]: "a string is: %s"%"anything"
+Out[263]: 'a string is: anything'
+\end{verbatim}
+
+\end{frame} 
+
+% ---------------------------------------------
+\begin{frame}[fragile]{String Formatting}
+
+{\Large multiple arguments:}
+
+\begin{verbatim}
+In [264]: "the number %s is %i"%('five', 5)
+Out[264]: 'the number five is 5'
+
+In [266]: "the first 3 numbers are: %i, %i, %i"%(1,2,3)
+Out[266]: 'the first 3 numbers are: 1, 2, 3'
+
+\end{verbatim}
+
+\end{frame} 
+
+%-------------------------------
+\begin{frame}[fragile]{String formatting}
+
+{\Large Gotcha}
+
+\begin{verbatim}
+In [127]: "this is a string with %i formatting item"%1 
+Out[127]: 'this is a string with 1 formatting item'
+
+In [128]: "string with %i formatting %s: "%2, "items" 
+TypeError: not enough arguments for format string
+
+# Done right:
+In [131]: "string with %i formatting %s"%(2, "items")
+Out[131]: 'string with 2 formatting items'
+
+In [132]: "string with %i formatting item"%(1,)
+Out[132]: 'string with 1 formatting item' 
+\end{verbatim}
+
+\end{frame}
+
+%-------------------------------
+\begin{frame}[fragile]{String formatting}
+
+{\Large Named arguments}
+
+\begin{verbatim}
+'Hello %(name)s!'%{'name':'Joe'}
+'Hello Joe!'
+
+'Hello %(name)s, how are you, %(name)s!' %{'name':'Joe'}
+'Hello Joe, how are you, Joe!'
+\end{verbatim}
+\vfill
+{\Large That last bit is a dictionary (next week) }
+
+\end{frame}
+
+%-------------------------------
+\begin{frame}[fragile]{String formatting}
+
+{\Large The format operator works with string variables, too:}
+
+\begin{verbatim}
+In [45]: s = "%i / %i = %i"
+
+In [46]: a, b = 12, 3
+
+In [47]: s%(a, b, a/b)
+Out[47]: '12 / 3 = 4'
+\end{verbatim}
+\vfill
+So you can dynamically build a format string
+\end{frame}
+
+%-------------------------------
+\begin{frame}[fragile]{Advanced Formatting}
+
+{\Large The format method}
+
+\begin{verbatim}
+In [14]: 'Hello {0} {1}!'.format('Joe', 'Barnes')
+Out[14]: 'Hello Joe Barnes!'
+
+In [12]: 'Hello {name}!'.format(name='Joe')
+Out[12]: 'Hello Joe!'
+\end{verbatim}
+\vfill
+{\Large pick one (probably regular string formatting): \\
+  -- get comfy with it }
+
+\end{frame}
+
+
+%-------------------------------
+\begin{frame}[fragile]{LAB}
+
+{\Large Fun with strings}
+
+\begin{itemize}
+  \item Rewrite: \verb| the first 3 numbers are: %i, %i, %i"%(1,2,3)| \\
+        for an arbitrary number of numbers...
+  \item write a format string that will take:\\
+        \verb|( 2, 123.4567, 10000)| \\
+        and produce: \\
+        \verb|'file_002 :   123.46, 1e+04'|
+  \item Write a (really simple) mail merge program
+  \item ROT13 -- see next slide
+\end{itemize}
+
+\vfill
+\url{http://docs.python.org/library/stdtypes.html#string-formatting-operations}
+\end{frame}
+
+%-------------------------------
+\begin{frame}[fragile]{LAB}
+
+\vfill
+\Large￼ROT13 encryption
+
+\vfill
+Applying ROT13 to a piece of text merely requires examining its alphabetic
+characters and replacing each one by the letter 13 places further along in
+the alphabet, wrapping back to the beginning if necessary
+
+\begin{itemize}
+  \item Implement rot13 decoding 
+  \item  decode this message: \\
+     \hspace{0.5in} Zntargvp sebz bhgfvqr arne pbeare \\
+     \hspace{0.5in} (from a geo-caching hint)
+\end{itemize}
+
+\end{frame}
+
+
+
+%-------------------------------
+\begin{frame}[fragile]{Follow Up}
+
+{\Large Recommended Reading:}
+\begin{itemize}
+  \item Think Python: Chapt. 9 -- 14
+  \item Dive Into Python: Chapt. 6
+  \item String methods: \url{http://docs.python.org/library/stdtypes.html#string-methods}
+  \item Extra: unicode: \url{http://www.joelonsoftware.com/articles/Unicode.html}
+\end{itemize}
+
+\vfill
+{\Large Do:}
+\begin{itemize}
+    \item Finish the LABs
+    \item Some CodingBat exercises. 
+    \item LPTHW: for extra practice with the concepts -- some of:\\
+          excercises 5 -- 14
+\end{itemize}
+
+\end{frame}
+
+\section{File Reading and Writing}
+
+%-------------------------------
+\begin{frame}[fragile]{Files}
+
+{\Large Text Files}
+
+\begin{verbatim}
+f = open('secrets.txt')
+secret_data = f.read()
+f.close()
+\end{verbatim}
+
+{\Large \verb|secret_data| is a string}
+
+\vfill
+(can also use \verb|file()| -- \verb|open()| is preferred)
+\end{frame}
+
+%-------------------------------
+\begin{frame}[fragile]{Files}
+
+{\Large Binary Files}
+
+\begin{verbatim}
+f = open('secrets.txt', 'rb')
+secret_data = f.read()
+f.close()
+\end{verbatim}
+
+{\Large \verb|secret_data| is still a string \\[.1in]
+(with arbitrary bytes in it)}
+\vfill
+(See the \verb|struct| module to unpack binary data )
+\end{frame}
+
+%-------------------------------
+\begin{frame}[fragile]{Files}
+
+{\Large File Opening Modes}
+\vfill
+\begin{verbatim}
+f = open('secrets.txt', [mode])
+
+'r', 'w', 'a'
+'rb', 'wb', 'ab'
+r+, w+, a+
+r+b, w+b, a+b
+U
+U+
+\end{verbatim}
+\vfill
+{\Large Gotcha -- w mode always clears the file}
+\end{frame}
+
+%-------------------------------
+\begin{frame}[fragile]{Text File Notes}
+
+{\Large Text is default}
+\begin{itemize}
+  \item Newlines are translated: \verb|\r\n -> \n|
+  \item   -- reading and writing!
+  \item Use *nux-style in your code: \verb|\n|
+  \item Open text files with \verb|'U'| "Universal" flag
+\end{itemize}
+
+\vfill
+{\Large Gotcha:}
+\begin{itemize}
+  \item  no difference between text and binary on *nix\\
+  \begin{itemize}
+    \item breaks on Windows
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+%-------------------------------
+\begin{frame}[fragile]{File Reading}
+
+{\Large Reading Part of a file}
+
+\begin{verbatim}
+header_size = 4096
+
+f = open('secrets.txt')
+secret_data = f.read(header_size)
+f.close()
+\end{verbatim}
+
+\end{frame}
+
+%-------------------------------
+\begin{frame}[fragile]{File Reading}
+
+{\Large Common Idioms}
+
+\begin{verbatim}
+for line in open('secrets.txt'):
+    print line
+\end{verbatim}
+
+\begin{verbatim}
+f = open('secrets.txt')
+while True:
+    line = f.readline()
+    if not line: 
+        break
+    do_something_with_line()
+\end{verbatim}
+
+\end{frame}
+
+%-------------------------------
+\begin{frame}[fragile]{File Writing}
+
+\begin{verbatim}
+
+outfile = open('output.txt', 'w')
+
+for i in range(10):
+    outfile.write("this is line: %i\n"%i)
+
+\end{verbatim}
+
+\end{frame}
+
+%-------------------------------
+\begin{frame}[fragile]{File Methods}
+
+{\Large Commonly Used Methods}
+\begin{verbatim}
+
+f.read() f.readline()  f.readlines() 
+
+f.write(str) f.writelines(seq)
+ 
+f.seek(offset)   f.tell()
+
+f.flush()           
+           
+f.close() 
+\end{verbatim}
+
+\end{frame}
+
+%-------------------------------
+\begin{frame}[fragile]{File Like Objects}
+
+{\Large File-like objects }
+\vfill
+{\large Many classes implement the file interface:}
+\vfill
+\begin{itemize}
+  \item loggers
+  \item \verb|sys.stdout|
+  \item \verb|urllib.open()|
+  \item pipes, subprocesses
+  \item StringIO
+\end{itemize}
+
+\url{￼http://docs.python.org/library/stdtypes.html#bltin-­‐file-­‐objects}
+\end{frame}
+
+%-------------------------------
+\begin{frame}[fragile]{StringIO}
+
+{\Large StringIO }
+\vfill
+\begin{verbatim}
+In [417]: import StringIO
+In [420]: f = StringIO.StringIO()
+
+In [421]: f.write("somestuff")
+
+In [422]: f.seek(0)
+
+In [423]: f.read()
+Out[423]: 'somestuff'
+\end{verbatim}
+
+{\Large handy for testing}
+\end{frame}
+
+
+\section{Unicode}
+
+\begin{frame}[fragile]{Unicode}
+
+{\Large I hope you all read this:}
+
+\vfill
+{\Large
+\centering
+The Absolute Minimum Every Software Developer Absolutely,
+Positively Must Know About Unicode and Character Sets (No Excuses!)
+
+}
+
+\vfill
+\url{http://www.joelonsoftware.com/articles/Unicode.html}
+
+\vfill
+{\Large If not -- go read it!}
+
+\end{frame}
+
+\begin{frame}[fragile]{Unicode}
+
+{\Large
+\vfill
+
+Everything is Bytes
+
+\vfill
+If it's on disk or on a network, it's bytes
+
+\vfill
+Python provides some abstractions to make it easier to deal with bytes
+
+\vfill
+}
+
+\end{frame}
+
+\begin{frame}[fragile]{Unicode}
+
+{\Large
+\vfill
+
+Unicode is a biggie
+
+\vfill
+strings vs unicode 
+}
+
+{\large (\verb|str()| vs. \verb|unicode()| ) }
+
+\vfill
+{\Large python 2.x vs 3.x}
+
+
+\vfill
+(actually, dealing with numbers rather than bytes is big -- but we take that for granted)
+
+\end{frame}
+
+\begin{frame}[fragile]{Unicode}
+
+{\Large
+\vfill
+Strings are sequences of bytes
+
+\vfill
+Unicode strings are sequences of platonic characters
+
+\vfill
+Platonic characters cannot be written to disk or network!
+}
+\vfill
+(ANSI -- one character == one byte -- so easy!)
+\end{frame}
+
+\begin{frame}[fragile]{Unicode}
+
+{\Large
+\vfill
+the \verb|unicode| object lets you work with characters
+
+\vfill
+encoding is converting from a uncode object to bytes
+
+\vfill
+decoding is converting from bytes to a unicode object
+
+}
+\vfill
+\end{frame}
+
+\begin{frame}[fragile]{Unicode}
+
+\begin{verbatim}
+import codecs
+ord()
+chr()
+unichr()
+str()
+unicode()
+encode()
+decode()
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Unicode Literals}
+
+
+{\Large 1) Use unicode in your source files:}
+
+\begin{verbatim}
+# -*- coding: utf-8 -*-
+\end{verbatim}
+
+\vfill
+{\Large 2) escape the unicode characters}
+
+\begin{verbatim}
+print u"The integral sign: \u222B"
+print u"The integral sign: \N{integral}"
+\end{verbatim}
+
+{\large lots of tables of code points online:}
+
+\url{http://inamidst.com/stuff/unidata/}
+
+\end{frame}
+
+
+%---------------------------------
+\begin{frame}[fragile]{Unicode}
+
+{\Large
+Use unicode objects in all your code
+
+\vfill
+decode on input
+
+\vfill
+encode on output
+
+\vfill
+Many packages do this for you\\
+\hspace{0.25in} (XML processing, databases, ...)
+
+\vfill
+Gotcha:\\
+\hspace{0.25in} Python has a default encoding (usually ascii)
+}
+\end{frame}
+
+\begin{frame}[fragile]{Unicode}
+
+{\Large Python Docs Unicode HowTo:}
+
+\url{http://docs.python.org/howto/unicode.html}
+
+\vfill
+``Reading Unicode from a file is therefore simple:''
+
+\begin{verbatim}
+import codecs
+f = codecs.open('unicode.rst', encoding='utf-8')
+for line in f:
+    print repr(line)
+\end{verbatim}
+
+\end{frame}
+
+%-------------------------------
+\begin{frame}[fragile]{Unicode LAB}
+
+\begin{itemize}
+  \item Find some nifty non-ascii characters you might use.\\
+        Create a unicode object with them in two different ways.
+  \item In the "code" dir for this week, there are two files:\\
+        \verb|text.utf16| \\
+        \verb|text.utf32| \\
+        read the contents into unicode objects
+  \item write some of the text from the first exercise to file.
+  \item read that file back in.
+\end{itemize}
+
+\vfill
+(reference: \url{http://inamidst.com/stuff/unidata/})
+
+\vfill
+NOTE: if you terminal does not support unicode -- you'll get an error trying
+to print. Try a different terminal or IDE, or google for a solution
+\end{frame}
+
+
+\section{Exceptions}
+
+\begin{frame}[fragile]{Exceptions}
+
+{\Large Another Branching structure:}
+\vfill
+\begin{verbatim}
+try:
+    do_something()
+    f = open('missing.txt')
+    process(f)   # never called if file missing
+except IOError:
+    print "couldn't open missing.txt"
+\end{verbatim}
+\vfill
+\end{frame}
+
+\begin{frame}[fragile]{Exceptions}
+
+{\Large Never Do this:}
+\vfill
+\begin{verbatim}
+try:
+    do_something()
+    f = open('missing.txt')
+    process(f)   # never called if file missing
+except:
+    print "couldn't open missing.txt"
+\end{verbatim}
+\vfill
+\end{frame}
+
+\begin{frame}[fragile]{Exceptions}
+
+{\Large Use Exceptions, rather than your own tests\\
+ -- Don't do this:}
+
+\vfill
+\begin{verbatim}
+do_something()
+if os.path.exists('missing.txt'):
+    f = open('missing.txt')
+    process(f)   # never called if file missing
+\end{verbatim}
+
+\vfill
+It will almost always work -- but the almost will drive you crazy
+\end{frame}
+
+%------------------------------------
+\begin{frame}[fragile]{Exceptions}
+
+{\centering
+
+{\Large "easier to ask forgiveness than permission"
+\vfill
+\hfill -- Grace Hopper
+}}
+
+\vfill
+\url{http://www.youtube.com/watch?v=AZDWveIdqjY}
+
+\end{frame}
+
+\begin{frame}[fragile]{Exceptions}
+
+\vfill
+{\Large 
+For simple scripts, let exceptions happen\\
+\vfill
+
+Only handle the exception if the code can and will do something about it
+}
+\vfill
+(much better debugging info when an error does occur)
+\end{frame}
+
+
+\begin{frame}[fragile]{Exceptions -- finally }
+
+\vfill
+\begin{verbatim}
+try:
+    do_something()
+    f = open('missing.txt')
+    process(f)   # never called if file missing
+except IOError:
+    print "couldn't open missing.txt"
+finally:
+    do_some_clean-up
+\end{verbatim}
+\vfill
+{\Large the \verb|finally:| clause will always run}
+\end{frame}
+
+\begin{frame}[fragile]{Exceptions -- else }
+
+\vfill
+\begin{verbatim}
+try:
+    do_something()
+    f = open('missing.txt')
+except IOError:
+    print "couldn't open missing.txt"
+else:
+    process(f) # only called if there was no exception
+\end{verbatim}
+\vfill
+{\Large Advantage:
+
+you know where the Exception came from}
+\end{frame}
+
+%--------------------------------------------
+\begin{frame}[fragile]{Exceptions -- using them }
+
+\vfill
+\begin{verbatim}
+try:
+    do_something()
+    f = open('missing.txt')
+except IOError as the_error:
+    print the_error
+    the_error.extra_info = "some more information"
+    raise
+\end{verbatim}
+
+{\Large Particularly useful if you catch more than one exception:}
+
+\begin{verbatim}
+except (IOError, BufferError, OSError) as the_error:
+    do_something_with (the_error)
+\end{verbatim}
+
+\end{frame}
+
+
+\begin{frame}[fragile]{Raising Exceptions }
+
+\begin{verbatim}
+def divide(a,b):
+    if b == 0:
+        raise ZeroDivisionError("b can not be zero")
+    else:
+        return a / b
+\end{verbatim}
+\vfill
+{\Large when you call it: }
+\vfill
+\begin{verbatim}
+In [515]: divide (12,0)
+
+ZeroDivisionError: b can not be zero
+\end{verbatim}
+
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Built in Exceptions}
+
+{\Large You can create your own custom exceptions}
+
+{\Large But...}
+
+\begin{verbatim}
+exp = \
+ [name for name in dir(__builtin__) if "Error" in name]
+
+len(exp)
+32
+\end{verbatim}
+
+{\Large For the most part, you can/should use a built in one}
+
+\end{frame}
+
+
+%
+%%-------------------------------
+%\begin{frame}{LAB}
+%{\Large Exceptions Lab}
+%\begin{itemize}
+%  \item
+%\end{itemize}
+%
+%\end{frame}
+
+
+\section{Paths and Directories}
+
+% ----------------------------------
+\begin{frame}[fragile]{Paths}
+
+{\Large Relative paths:}
+
+\begin{verbatim}
+secret.txt
+./secret.txt
+\end{verbatim}
+
+{\Large Absolute paths:}
+\begin{verbatim}
+/home/chris/secret.txt
+\end{verbatim}
+
+{\Large Either work with \verb|open()|, etc.}
+
+\vfill
+(working directory only makes sense with command-line programs...)
+\end{frame}
+
+% ----------------------------------
+\begin{frame}[fragile]{os.path}
+
+\begin{verbatim}
+os.getcwd() -- os.getcwdu()
+chdir(path)
+
+os.path.abspath()
+os.path.relpath()￼
+\end{verbatim}
+
+\end{frame}
+
+% ----------------------------------
+\begin{frame}[fragile]{os.path}
+
+\vfill
+\begin{verbatim}
+os.path.split()
+os.path.splitext()
+os.path.basename()
+os.path.dirname()
+os.path.join()
+\end{verbatim}
+
+\vfill
+(all platform independent)
+
+\end{frame}
+
+
+% ----------------------------------
+\begin{frame}[fragile]{directories}
+
+\vfill
+\begin{verbatim}
+os.listdir()
+os.mkdir()
+
+os.walk()
+
+\end{verbatim}
+
+\vfill
+(higher level stuff in \verb|shutil| module)
+
+\end{frame}
+
+%-------------------------------
+\begin{frame}{LAB}
+
+\begin{itemize}
+  \item write a program which prints the full path to all files in the current
+        directory, one per line
+  \item write a program which copies a file from a source, to a
+        destination (without using shutil, or the OS copy command)
+   \item update mail-merge from the previous lab to write output
+         to individual files on disk
+\end{itemize}
+
+\end{frame}
+
+%-------------------------------
+\begin{frame}{Follow Up}
+
+\begin{itemize}
+  \item TP: Chapters -- 10, 11, 12, 13
+  \item Finish (or re-factor) the Labs you didn't finish in class.
+  \item CodingBat - 12 more string \& list problems
+  \item Write a script which does something useful (to you) and reads \& writes
+        files. Very, very small scope is good. something useful at work would
+        be great.
+\end{itemize}
+
+\end{frame}
+
+
+\end{document}
+
+ 
