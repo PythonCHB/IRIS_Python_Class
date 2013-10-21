@@ -1,0 +1,331 @@
+\documentclass{beamer}
+%\usepackage[latin1]{inputenc}
+\usetheme{Warsaw}
+\title[Intro to Python]{Numpy}
+\author{Christopher Barker}
+\institute{IRIS}
+\date{October 23, 2013}
+
+\usepackage{listings}
+\usepackage{hyperref}
+
+\begin{document}
+
+% ---------------------------------------------
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% ---------------------------------------------
+\begin{frame}
+\frametitle{Table of Contents}
+%\tableofcontents[currentsection]
+  \tableofcontents
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%
+\section{numpy}
+
+%---------------------------
+\begin{frame}[fragile]{numpy}
+
+\vfill
+\begin{center}
+{\LARGE numpy}
+
+\vfill
+{\Large Not just for lots of numbers!\\[0.1in]
+(but it's great for that!)}
+\end{center}
+\vfill
+\url{http://www.numpy.org/}
+\end{frame} 
+
+
+\begin{frame}[fragile]{what is numpy?}
+
+{\Large An N-Dimensional array object}
+
+\vfill
+{\Large A whole pile of tools for operations on/with that object.}
+
+\vfill
+
+\end{frame} 
+
+%----------------------------------
+\begin{frame}[fragile]{Why numpy?}
+
+{\Large Classic answer: Lots of numbers}
+
+\vfill
+\begin{itemize}
+  \item Faster
+  \item Less memory
+  \item More data types
+\end{itemize}
+
+
+\vfill
+{\Large Even if you don't have lot of numbers:}
+\begin{itemize}
+  \item N-d array slicing
+  \item Vector operations
+  \item Flexible data types
+\end{itemize}
+
+\end{frame} 
+
+% %----------------------------------
+\begin{frame}[fragile]{why numpy?}
+
+{\Large Wrapper for a block of memory:}
+
+\begin{itemize}
+  \item Interfacing with C libs
+  \item PyOpenGL
+  \item GDAL
+  \item NetCDF4
+  \item Shapely
+\end{itemize}
+
+{\Large Image processing:}
+\begin{itemize}
+  \item PIL
+  \item WxImage
+  \item ndimage
+\end{itemize}
+
+\end{frame} 
+
+%----------------------------------
+\begin{frame}[fragile]{What is an nd array?}
+\begin{itemize}
+  \item N-dimensional (up to 32!)
+  \item Homogeneous array:
+  \begin{itemize}
+    \item Every element is the same type\\
+          (but that type can be a pyObject)
+    \item Int, float, char -- more exotic types
+  \end{itemize}
+  \item ``rank'' – number of dimensions
+  \item Strided data:
+  \begin{itemize}
+    \item Describes how to index into block of memory
+    \item PEP 3118 -- Revising the buffer protocol
+  \end{itemize}
+\end{itemize}
+
+\vfill
+{\large demos: \verb|memory.py| and \verb|structure.py|}
+
+\end{frame} 
+
+%----------------------------------
+\begin{frame}[fragile]{Built-in Data Types}
+
+\begin{itemize}
+  \item Signed and unsigned Integers\\
+        8, 16, 32, 64 bits
+  \item Floating Point\\
+        32, 64, 96, 128 bits (not all platforms)
+  \item Complex\\
+        64, 128, 192, 256 bits
+  \item String and unicode\\
+        Static length 
+  \item Bool \\
+        8 bit
+  \item Python Object \\
+        Really a pointer
+\end{itemize}
+
+\vfill
+{\large demo: \verb|object.py|}
+
+\end{frame} 
+
+%----------------------------------
+\begin{frame}[fragile]{Compund dtypes}
+
+{\Large
+\begin{itemize}
+  \item Can define any combination of other types \\
+        Still Homogenous:  Array of structs.
+  \item Can name the fields
+  \item Can be like a database table
+  \item Useful for reading binary data
+\end{itemize}
+}
+
+\vfill
+{\Large demo: \verb|dtypes.py|}
+
+\end{frame} 
+
+%----------------------------------
+\begin{frame}[fragile]{Array Constructors:}
+
+{\Large From scratch:}
+
+\verb|ones(), zeros(), empty(), arange(), linspace(), logspace()|
+
+( Default dtype: np.float64 )
+
+
+\vfill
+{\Large From sequences:}
+
+\verb|array(), asarray()|
+
+( Build from any sequence )
+
+\vfill
+{\Large  From binary data:}
+\verb|fromstring(), frombuffer(), fromfile()|
+
+\vfill
+{\Large Assorted linear algebra standards:}
+\verb|eye(), diag(), etc.| 
+
+\vfill
+{\large demo: \verb|constructors.py|}
+\end{frame} 
+
+%----------------------------------
+\begin{frame}[fragile]{Broadcasting:}
+
+{\Large Element-wise operations among two different rank arrays:}
+
+\vfill
+{\Large Simple case: scalar and array:}
+
+\begin{verbatim}
+In [37]: a
+Out[37]: array([1, 2, 3])
+
+In [38]: a*3
+Out[38]: array([3, 6, 9])
+\end{verbatim}
+
+{\Large Great for functions of more than one variable on a grid}
+
+\vfill
+{\large demo: \verb|broadcasting.py|}
+\end{frame} 
+
+%----------------------------------
+\begin{frame}[fragile]{Slicing -- views:}
+
+{\Large a slice is a ``view'' on the array:\\
+new object, but shares memory:}
+
+\begin{verbatim}
+In [12]: a = np.array((1,2,3,4))
+In [13]: b = a[:]
+# for lists -- [:] means copy -- not for arrays!
+In [15]: a is b
+Out[15]: False
+# it's new array, but...
+In [16]: b[2] = 5
+In [17]: a
+Out[17]: array([1, 2, 5, 4])
+# a and b share data
+\end{verbatim}
+
+\vfill
+{\large demo: \verb|slice.py|}
+\end{frame} 
+
+
+%----------------------------------
+\begin{frame}[fragile]{Working with compiled code:}
+
+{\Large Wrapper around a C pointer to a block of data}
+
+\begin{itemize}
+  \item Some code can't be vectorized
+  \item Interface with existing libraries
+\end{itemize}
+
+\vfill
+{\Large Tools:}
+\begin{itemize}
+  \item C API: you don't want to do that!
+  \item Cython: typed arrays
+  \item Ctypes 
+  \item SWIG: numpy.i 
+  \item Boost: boost array
+  \item f2py
+\end{itemize}
+
+\vfill
+Example of numpy+cython: \url{http://wiki.cython.org/examples/mandelbrot}
+\end{frame} 
+
+%----------------------------------
+\begin{frame}[fragile]{numpy persistance:}
+
+{\Large \verb|.tofile() / fromfile()|}\\
+ -- Just the raw bytes, no metadata
+
+\vfill
+{\Large pickle }
+
+\vfill
+{\Large \verb|savez()| -- numpy zip format}\\
+Compact: binary dump plus metadata
+
+\vfill
+{\Large netcdf}
+
+\vfill
+{\Large Hdf}
+\begin{itemize}
+  \item Pyhdf
+  \item pytables
+\end{itemize}
+
+
+\end{frame} 
+
+%----------------------------------
+\begin{frame}[fragile]{Other stuff:}
+
+\begin{itemize}
+  \item Masked arrays
+  \item Memory-mapped files
+  \item Set operations: unique, etc
+  \item Random numbers
+  \item Polynomials
+  \item FFT
+  \item Sorting and searching
+  \item Linear Algebra
+  \item Statistics
+\end{itemize}
+
+{\large (And all of scipy!)}
+
+\end{frame} 
+
+%----------------------------------
+\begin{frame}[fragile]{numpy docs:}
+
+\url{www.numpy.org}\\
+   -- Numpy reference Downloads, etc
+
+\vfill
+\url{www.scipy.org}\\
+   -- lots of docs
+
+\vfill
+{\large Scipy cookbook}\\
+\url{http://www.scipy.org/Cookbook}
+
+\vfill
+{\large ``The Numpy Book''}\\
+\url{http://www.tramy.us/numpybook.pdf}
+
+\end{frame} 
+
+\end{document}
+ 
