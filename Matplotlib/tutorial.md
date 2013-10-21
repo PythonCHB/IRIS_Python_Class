@@ -5,6 +5,9 @@ title: Plotting in Python with matplotlib
 ---
 **Based on Lecture Material by Anthony Scopatz and Katy Huff**
 
+from https://github.com/swcarpentry/bc/tree/gh-pages/lessons
+
+
 Plotting in Python
 ==================
 

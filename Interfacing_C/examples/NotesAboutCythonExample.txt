@@ -1,0 +1,28 @@
+Notes about Cython example:
+
+
+simple function:
+
+def is callable from Python
+
+cdef is only callable from Cython (or C)
+
+generating C code:
+
+$ cython cy_add.pyx
+
+generating "annotated" C code (HTML):
+
+$ cython -a cy_add.pyx
+
+Look at the htmk -- the yellow highlights are places where calls into the Python runtime are used.
+
+To build extension:
+
+python cy_setup.py build_ext --inplace
+
+
+
+
+
+
