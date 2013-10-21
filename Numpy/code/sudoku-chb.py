@@ -148,13 +148,13 @@ class Grid(object):
         self.d = d = (size - 20) / 9
         self.x0 = (w - (self.d * 9)) / 2
         self.y0 = (h - (self.d * 9)) / 2
-        self.font_size = int(11 * d/16.0)
+        self.font_size = max( int(11 * d/16.0), 10)
         ##figure out the text offset
         dc = wx.ScreenDC()
         dc.SetFont(wx.FontFromPixelSize((self.font_size, self.font_size),
-                    wx.FONTFAMILY_SWISS,
-                    wx.FONTSTYLE_NORMAL,
-                    wx.FONTWEIGHT_BOLD,
+                                         wx.FONTFAMILY_SWISS,
+                                         wx.FONTSTYLE_NORMAL,
+                                         wx.FONTWEIGHT_BOLD,
                                         )
                    )
         w,h = dc.GetTextExtent("5")
@@ -214,7 +214,7 @@ class GridWindow(wx.Window):
         # draw the background:
         dc.SetBackground(wx.Brush(self.GetBackgroundColour()))
         dc.Clear()
-        dc.SetBrush(wx.Brush(wx.Color(128,128,255)))
+        dc.SetBrush(wx.Brush(wx.Colour(128,128,255)))
         dc.SetPen(wx.TRANSPARENT_PEN)
         dc.DrawRectangle(x0, y0, d*9, d*9 )
 
