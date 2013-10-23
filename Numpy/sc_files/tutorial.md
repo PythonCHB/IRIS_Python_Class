@@ -40,10 +40,10 @@ automatically-chosen one would be unsuitable.
 
 ```python    
 
-  >>> A = numpy.array([1, 2.3, 4])   
+  >>> A = np.array([1, 2.3, 4])   
   >>> A.dtype 
   dtype('float64')   
-  >>> B= numpy.array([1, 2.3, 4], dtype int)   
+  >>> B= np.array([1, 2.3, 4], dtype int)   
   >>> B.dtype   
   dtype('int32') 
 ```
@@ -51,16 +51,16 @@ automatically-chosen one would be unsuitable.
 As you might expect, creating a NumPy array this way can be slow, since
 it must manually convert each element of a list into its equivalent C
 type (int objects become C ints, etc). There are many other ways to
-create NumPy arrays, such as **numpy.identity**, **numpy.zeros**,
-**numpy.zeros\_like**, or by manually specifying the dimensions and type
+create NumPy arrays, such as **np.identity**, **np.zeros**,
+**np.zeros\_like**, or by manually specifying the dimensions and type
 of the array with the low-level creation function:
 
 ```python    
 
-  numpy.ndarray((2, 3, 4), dtype=complex) # new 2x3x4 array of complex numbers 
+  np.ndarray((2, 3, 4), dtype=complex) # new 2x3x4 array of complex numbers 
 ```
 
-For many of the examples below, we will be using **numpy.arange** which,
+For many of the examples below, we will be using **np.arange** which,
 similar to the Python built-in function **range**, returns a NumPy array
 of integers from 0 to N-1, inclusive. Like **range**, you can also
 specify a starting value and a step.
@@ -68,11 +68,11 @@ specify a starting value and a step.
 
 ```python
 
-  >>> numpy.arange(2, 5)
+  >>> np.arange(2, 5)
   array([2, 3, 4])
-  >>> numpy.arange(1, 5, 2)
+  >>> np.arange(1, 5, 2)
   array([1, 3])
-  >>> numpy.arange(1, 10, 2)
+  >>> np.arange(1, 10, 2)
   array([1, 3, 5, 7, 9])
 ```
 
@@ -108,7 +108,7 @@ access elements, **len()** to access the size of the array, and so on.
 
 ```python
 
-  >>> A = numpy.arange(5)
+  >>> A = np.arange(5)
   >>> A
   array([0, 1, 2, 3, 4])
   >>> A[3]
@@ -132,8 +132,8 @@ element of the array).
 
 ```python
 
-  >>> A = numpy.arange(5)
-  >>> B = numpy.arange(5, 10)
+  >>> A = np.arange(5)
+  >>> B = np.arange(5, 10)
   >>> A
   array([0, 1, 2, 3, 4])
   >>> B
@@ -151,7 +151,7 @@ applied to all the elements of the array.
 
 ```python
   
-  >>> A = numpy.arange(5)
+  >>> A = np.arange(5)
   >>> 2*A
   array([0, 2, 4, 6, 8])
   >>> A**2
@@ -172,8 +172,8 @@ example:
 
 ```python
 
-  >>> A = numpy.array([1, 2, 3, 4, 5])
-  >>> B = numpy.array([1, 1, 3, 3, 5])
+  >>> A = np.array([1, 2, 3, 4, 5])
+  >>> B = np.array([1, 1, 3, 3, 5])
   >>> A == B
   array([ True, False,  True, False,  True], dtype=bool)
 ```
@@ -204,7 +204,7 @@ first dimension is 1. NumPy makes this extremely simple:
 
 ```python
 
-  >>> A = numpy.arange(16).reshape(4, 4)
+  >>> A = np.arange(16).reshape(4, 4)
   >>> A
   array([[ 0,  1,  2,  3],
          [ 4,  5,  6,  7],
@@ -248,7 +248,7 @@ Indexing with an array of indices:
 
 ```python
 
-  >>> A = numpy.arange(5, 10)
+  >>> A = np.arange(5, 10)
   >>> A
   array([5, 6, 7, 8, 9])
   >>> A[[0, 2, 3]]
@@ -263,7 +263,7 @@ Indexing with an array of booleans:
 ```python
   
   >>> import random
-  >>> A = numpy.array([random.randint(0, 10) for i in range(10)])
+  >>> A = np.array([random.randint(0, 10) for i in range(10)])
   >>> A
   array([10,  5,  1,  2,  3,  9,  3,  4,  9,  8])
   >>> A[A>5] = 5
@@ -288,7 +288,7 @@ scalar will repeat that list N times.
 
 ```python
   
-  >>> numpy.arange(5)*2
+  >>> np.arange(5)*2
   array([0, 2, 4, 6, 8])
   >>> range(5)*2
   [0, 1, 2, 3, 4, 0, 1, 2, 3, 4]
@@ -300,7 +300,7 @@ back.
 
 ```python
   
-  >>> numpy.arange(5) + numpy.arange(5)
+  >>> np.arange(5) + np.arange(5)
   array([0, 2, 4, 6, 8])
   >>> range(5) + range(5)
   [0, 1, 2, 3, 4, 0, 1, 2, 3, 4]
@@ -322,7 +322,7 @@ or tuples, which are always copies.
 
 ```python
 
-  >>> A = numpy.arange(5)
+  >>> A = np.arange(5)
   >>> B = A[0:1]
   >>> B[0] = 42
   >>> A
@@ -360,7 +360,7 @@ arrays.
 ```python
   
   >>> import random
-  >>> A = numpy.array([random.randint(0, 10) for i in range(10)])
+  >>> A = np.array([random.randint(0, 10) for i in range(10)])
   >>> A
   array([6, 9, 9, 4, 9, 8, 7, 9, 0, 3])
   >>> A.min()
@@ -380,7 +380,7 @@ operations:
 
 ```python
   
-  >>> A = numpy.arange(16).reshape(4, 4)
+  >>> A = np.arange(16).reshape(4, 4)
   >>> A
   array([[ 0,  1,  2,  3],
          [ 4,  5,  6,  7],
@@ -411,13 +411,11 @@ Rather, you can do linear algebra operations with the 2-d arrays
 ```python
 In [1]: import numpy as np
 
-In [2]: import numpy.linalg
-
 In [3]: A = np.array([[3, 2, -1], [2, -2, 4], [-1, .5, -1]])
 
 In [4]: B = np.array([1, -2, 0])
 
-In [5]: numpy.linalg.solve(A, B)
+In [5]: np.linalg.solve(A, B)
 Out[5]: array([ 1., -2., -2.])
 
 ```
@@ -435,7 +433,7 @@ on. Calling a ufunc is a simple matter:
 ```python
 
   >>> A = np.arange(1,10)
-  >>> numpy.log10(A)
+  >>> np.log10(A)
   array([ 0.        ,  0.30103   ,  0.47712125,  0.60205999,  0.69897   ,
           0.77815125,  0.84509804,  0.90308999,  0.95424251])
 ```
