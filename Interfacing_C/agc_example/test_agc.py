@@ -1,49 +1,61 @@
 #!/usr/bin/env python
 
 """
-test code for the "agc_subroutine" extension, generated from fortran by f2py
-"""
+test code for various AGC modules
+
+designed to be run with py.test or nose
+
+some timing code to cut&paste into iPython:
+
 import numpy as np
-import matplotlib.pyplot as plt
-
-import agc_subroutine
+import agc_cython
 import agc_python
+import agc_subroutine
+import agc_c_cy
 
-print "the doctring for agc:"
-print agc_subroutine.agc.__doc__
+timeit agc_cython.agc(10, np.arange(1000, dtype=np.float32))
 
-# to call it:
-# create a noisy array:
+timeit agc_python.agc(10, np.arange(1000, dtype=np.float32))
 
-t = np.linspace(0,20,100).astype(np.float32)
+timeit agc_subroutine.agc(10, np.arange(1000, dtype=np.float32))
 
-signal = np.sin(t)
+timeit agc_c_cy.agc(10, np.arange(1000, dtype=np.float32))
 
-# add some noise
-signal += (np.random.random(signal.shape)-0.5) * 0.3
+"""
 
-# create an array for the result:
-#filtered = np.zeros_like(signal)
+import numpy as np
 
-# run it through the AGC filter:
-filtered = agc_subroutine.agc(10, signal)
+import agc_cython
+import agc_python
+import agc_c_cy
 
-# try the python version
-filtered2 = agc_python.agc(10, signal)
+def test_cython():
+    # just make sure it runs.
+    signal = np.arange(20, dtype=np.float32)
 
-if np.allclose(filtered2, filtered2):
-	print "the same"
-else:
-	print "not the same"
+    result = agc_cython.agc(4, signal)
 
-## plot the results
+def test_c_wrap():
+    # just make sure it runs.
+    signal = np.arange(20, dtype=np.float32)
 
-fig = plt.figure(figsize=(10,5))
-ax = fig.add_subplot(1,1,1)
-ax.plot(t, signal, t, filtered, t, filtered2)
+    result = agc_c_cy.agc(4, signal)
 
-plt.show()
 
+
+def test_cy_py_same():
+    signal = np.arange(20, dtype=np.float32)
+    
+    cy_result = agc_cython.agc(4, signal)
+    py_result = agc_python.agc(4, signal)
+    c_cy_result = agc_c_cy.agc(4, signal)
+
+    print "cy:", cy_result
+    print "py:", py_result
+    print "c_cy", c_cy_result
+
+    assert np.array_equal(cy_result, py_result)
+    assert np.array_equal(cy_result, c_cy_result)
 
 
 
