@@ -71,7 +71,7 @@ def agc( int nAGC, cnp.ndarray[float, ndim=1, mode='c'] amp):
 
    for i in range(nAGC2, npts - nAGC2):
       fmax=0.0
-      for j in range(i-nAGC2,i+nAGC2):
+      for j in range(i-nAGC2,i+nAGC2+1):
             if absamp[j] > fmax:
                 fmax = absamp[j]
       ampAGC[i] = amp[i]/fmax
